@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Ti, Mi Amor</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Animate.css para animaciones adicionales -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    /* Scroll Snap en el html para landing page */
+    html {
+      scroll-snap-type: y mandatory;
+    }
+    /* Reset y estilos globales */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Splash Screen */
+    #splash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    #splash h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 4em;
+      color: #e63946;
+      animation: bounce 2s infinite;
+    }
+    #splash .big-heart {
+      font-size: 6em;
+      color: #e63946;
+      margin-top: 20px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-30px); }
+      60% { transform: translateY(-15px); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    /* Fondo de Particles.js */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+    }
+    /* Contenedor de corazones flotantes */
+    .heart-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -2;
+    }
+    .heart {
+      position: absolute;
+      color: #e63946;
+      opacity: 0.8;
+      font-size: 2em;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+    /* Header */
+    header {
+      scroll-snap-align: start;
+      text-align: center;
+      padding: 100px 20px 50px;
+      background: rgba(255,255,255,0.85);
+      animation: fadeInDown 1s ease;
+      margin: 20px auto;
+      max-width: 1000px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      min-height: 100vh;
+    }
+    header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 5em;
+      color: #e63946;
+    }
+    header p {
+      font-size: 1.5em;
+      color: #555;
+      margin-top: 10px;
+    }
+    /* Secciones */
+    section {
+      scroll-snap-align: start;
+      background: #F5F5F5; /* Blanco humo */
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    h2 {
+      text-align: center;
+      color: #e63946;
+      margin-bottom: 40px;
+      font-size: 2.5em;
+    }
+    /* Timeline de Nuestra Historia */
+    .timeline {
+      position: relative;
+      margin: 0 auto;
+      padding: 20px 0;
+      width: 90%;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #e63946;
+      transform: translateX(-50%);
+    }
+    .timeline-item {
+      position: relative;
+      width: 45%;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      animation: fadeInUp 1s ease;
+    }
+    .timeline-item:nth-child(odd) { left: 0; }
+    .timeline-item:nth-child(even) { left: 55%; }
+    .timeline-item::before {
+      content: '❤';
+      position: absolute;
+      top: 10px;
+      font-size: 1.5em;
+      color: #e63946;
+    }
+    .timeline-item:nth-child(odd)::before { right: -30px; }
+    .timeline-item:nth-child(even)::before { left: -30px; }
+    /* Carrusel de Recuerdos Visible */
+    .carousel-container {
+      scroll-snap-align: start;
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      height: 500px;
+      margin: 20px auto;
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+    .carousel-image {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .carousel-image.active {
+      opacity: 1;
+    }
+    /* Lightbox Modal para Carrusel */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 50;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      overflow: hidden;
+    }
+    .lightbox-content {
+      display: block;
+      max-width: 90%;
+      max-height: 80%;
+      margin: 80px auto;
+      border-radius: 8px;
+      animation: fadeIn 0.5s ease;
+    }
+    .lightbox .close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    .lightbox .close:hover,
+    .lightbox .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .arrow {
+      position: absolute;
+      top: 50%;
+      color: #f1f1f1;
+      font-size: 50px;
+      cursor: pointer;
+      user-select: none;
+      transform: translateY(-50%);
+      transition: transform 0.3s ease;
+    }
+    .arrow:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+    .arrow.left {
+      left: 20px;
+    }
+    .arrow.right {
+      right: 20px;
+    }
+    /* Citas y Mensajes */
+    .quote {
+      font-style: italic;
+      text-align: center;
+      font-size: 1.5em;
+      margin: 20px;
+      color: #555;
+      animation: fadeIn 2s ease;
+    }
+    /* Sección de Frases Adicionales */
+    .quotes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    /* Botones e Interactividad Extra */
+    .contact {
+      text-align: center;
+      margin-top: 40px;
+      animation: fadeInUp 1s ease;
+    }
+    .contact button {
+      border: none;
+      color: #fff;
+      padding: 20px 40px;
+      font-size: 1.2em;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin: 10px;
+    }
+    /* Botón de osito con imagen - transparente */
+    .btn-osito {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .btn-osito img {
+      width: 200px; /* Tamaño aumentado */
+      height: 300px;
+      pointer-events: none;
+    }
+    .btn-osito:hover {
+      transform: scale(1.2);
+    }
+    /* Modal con mensaje romántico */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease;
+      z-index: 10;
+    }
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 500px;
+      animation: fadeInDown 1s ease;
+    }
+    .modal-content h3 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3em;
+      color: #e63946;
+    }
+    .modal-content p {
+      font-size: 1.2em;
+      color: #555;
+      margin: 20px 0;
+    }
+    .modal-content button {
+      background: #e63946;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .modal-content button:hover {
+      background: #d62828;
+    }
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: #777;
+      background: rgba(255,255,255,0.85);
+      margin: 20px auto;
+      max-width: 1000px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    /* Keyframes para animaciones */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Responsividad */
+    @media(max-width: 768px) {
+      .timeline-item {
+        width: 90%;
+        left: 5% !important;
+      }
+      .carousel-container {
+        height: 300px;
+      }
+    }
+    @media(max-width: 480px) {
+      header h1 { font-size: 3em; }
+    }
+
+    .header-gifs {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+.header-gifs img {
+  max-width: 150px;
+  height: auto;
+  border-radius: 8px;
+}
+  </style>
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash">
+    <h1 class="animate__animated animate__fadeInDown">¡Feliz San Valentín!</h1>
+    <div class="big-heart animate__animated animate__pulse">❤</div>
+    <!-- Agregamos la imagen adicional en el splash -->
+    <img src="https://www.icegif.com/wp-content/uploads/icegif-4785.gif" alt="Decoración" style="width: 300px; margin-top: 20px;">
+  </div>
+  
+  <!-- Música de fondo (YouTube embebido, oculto) -->
+  <iframe style="display:none;" src="https://www.youtube.com/embed/0CAhAwd--7Y?autoplay=1&loop=1&playlist=0CAhAwd--7Y" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  
+  <!-- Contenedor de Particles.js -->
+  <div id="particles-js"></div>
+  
+  <!-- Contenedor de Lluvia de Corazones -->
+  <div class="heart-container" id="heart-container"></div>
+
+  <!-- Header -->
+  <header>
+    <h1 class="animate__animated animate__fadeInDown">Para Ti, Mi Amor</h1>
+    <p class="animate__animated animate__fadeInDown">Un viaje mágico por nuestra historia</p>
+    <div class="header-gifs">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSof5eImJq6BeOp_YBegYq3P227B3QAeYQDdOnGsvvuAPIfaCTZ4eWdpF4szGbQLMFbPTg&usqp=CAU" alt="GIF 1">
+      <img src="https://www.gifcen.com/wp-content/uploads/2021/08/love-gif-4.gif" alt="GIF 2">
+      <img src="https://media4.giphy.com/media/s6fnVyWTfM2nUKuMVY/200w.gif?cid=6c09b9526e5z6qto2go22ui3j9c1xoqs7gx5afgze0lfd27y&ep=v1_gifs_search&rid=200w.gif&ct=g" alt="GIF 3">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE7wkM1EV27qp1mttBDYO_NlXzIc6zRGkmyqKaebafBK8UWeElGqErXYmC6h-MxXCTEk8&usqp=CAU" alt="GIF 4">
+    </div>
+  </header>
+
+  <!-- Sección: Nuestra Historia -->
+  <section id="nuestra-historia">
+    <h2>Nuestra Historia</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <h3>Vine de Perú a España</h3>
+        <p>Amor mío, desde que emprendí mi viaje desde Perú hasta España, mi único deseo fue estar a tu lado. Quería darlo todo por nuestro amor, y gracias a Dios, el destino nos permitió vivir momentos inolvidables juntos.</p>
+      </div>
+      <div class="timeline-item">
+        <h3>El Reencuentro</h3>
+        <p>Sé que hubo momentos en los que la distancia nos separó, y durante casi un año no compartíamos nuestras risas y sueños. Pero el destino, siempre atento a nuestro amor, nos volvió a unir, recordándonos que nada puede separarnos.</p>
+      </div>
+      <div class="timeline-item">
+        <h3>Juntos por Siempre</h3>
+        <p>Hoy, después de más de 6 años de conocerte, cada día a tu lado es un regalo. Entre altibajos y desafíos, he aprendido a amarte con toda mi alma, sabiendo que cada experiencia nos hace más fuertes y nos acerca irremediablemente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección: Carrusel de Recuerdos (Recuerdos en Movimiento) -->
+  <section id="carrusel">
+    <h2>Recuerdos en Movimiento</h2>
+    <div class="carousel-container" onclick="openLightbox(carouselImages[currentIndexCarousel], currentIndexCarousel)">
+      <img src="./img/1.jpeg" alt="Recuerdo 1" class="carousel-image active">
+      <img src="./img/2.jpeg" alt="Recuerdo 2" class="carousel-image">
+      <img src="./img/3.jpeg" alt="Recuerdo 3" class="carousel-image">
+      <img src="./img/4.jpeg" alt="Recuerdo 4" class="carousel-image">
+      <img src="./img/5.jpeg" alt="Recuerdo 5" class="carousel-image">
+    </div>
+  </section>
+
+  <!-- Lightbox Modal para Carrusel -->
+  <div id="lightbox" class="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <span class="arrow left" onclick="prevImage()">&#10094;</span>
+    <img class="lightbox-content" id="lightbox-img">
+    <span class="arrow right" onclick="nextImage()">&#10095;</span>
+  </div>
+
+  <!-- Sección: Citas y Mensajes -->
+  <section id="mensajes">
+    <h2>Mensajes y Citas</h2>
+    <div class="quotes-container">
+      <div class="quote">
+        <p>"El amor es el arte de convertir lo ordinario en extraordinario."</p>
+        <p>- Anónimo</p>
+      </div>
+      <div class="quote">
+        <p>"Contigo, cada día se pinta con los colores del amor."</p>
+      </div>
+      <div class="quote">
+        <p>"Amar es encontrar en la felicidad de otro tu propia felicidad."</p>
+      </div>
+      <div class="quote">
+        <p>"Nuestro amor es la poesía que da sentido a cada día."</p>
+      </div>
+      <div class="quote">
+        <p>"Cada instante contigo es un sueño del que nunca quiero despertar."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección: Interactividad (Confeti, Música y Modal) -->
+  <section id="contacto">
+    <h2>Te Quiero</h2>
+    <div class="contact">
+      <button class="btn-osito" onclick="mostrarModal()" title="Mensaje Secreto">
+        <img src="https://i.pinimg.com/originals/34/bc/3d/34bc3d75616152fd74c0de33a1847c92.gif" alt="Osito">
+      </button>
+      <p id="mensajeSorpresa" style="display: none; font-size:1.3em; margin-top:20px;">Cada momento a tu lado es pura magia. ¡Te amo!</p>
+    </div>
+  </section>
+
+  <!-- Modal con mensaje romántico -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>Te Amo</h3>
+      <p>Amor, te quiero mucho. Te amo muchísimo y me alegra pasar momentos juntos a tu lado. Sé que estos días no han sido tan buenos y lo siento mucho, amor. Mi compromiso contigo y con nuestra relación se mantiene firme. Te quiero tanto, amorcito, que haré hasta lo imposible para que estemos más enamorados que nunca. Me encanta estar contigo; eres una gran enamorada y te quiero para siempre, ¡amor! ¡Feliz San Valentín! Te quiero y te amo, nunca lo olvides, corazón <3</p>
+      <button onclick="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; De Dani para Yaniiii .</p>
+  </footer>
+
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 80,
+          "density": { "enable": true, "value_area": 800 }
+        },
+        "color": { "value": "#e63946" },
+        "shape": {
+          "type": "circle",
+          "stroke": { "width": 0, "color": "#000000" }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": false
+        },
+        "size": {
+          "value": 3,
+          "random": true
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#e63946",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 3,
+          "direction": "none",
+          "random": false,
+          "straight": false,
+          "out_mode": "out"
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "repulse" },
+          "onclick": { "enable": true, "mode": "push" }
+        },
+        "modes": {
+          "repulse": { "distance": 100, "duration": 0.4 },
+          "push": { "particles_nb": 4 }
+        }
+      },
+      "retina_detect": true
+    });
+  </script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    // Lanza confeti automáticamente unos segundos después de cargar la página y oculta el splash
+    window.onload = function() {
+      setTimeout(function() {
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        document.getElementById('mensajeSorpresa').style.display = 'block';
+        document.getElementById('splash').classList.add('animate__animated', 'animate__fadeOut');
+        setTimeout(function() {
+          document.getElementById('splash').remove();
+        }, 1000);
+      }, 3000);
+    }
+  </script>
+  <!-- Música (control con botón) -->
+  <script>
+    function toggleMusica() {
+      var iframe = document.querySelector('iframe');
+      if(iframe.style.display === 'none'){
+        iframe.style.display = 'block';
+      } else {
+        iframe.style.display = 'none';
+      }
+    }
+  </script>
+  <!-- Modal -->
+  <script>
+    function mostrarModal() {
+      document.getElementById('modal').classList.add('active');
+    }
+    function cerrarModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+  </script>
+  <!-- Lightbox (Carrusel) -->
+  <script>
+    const galleryImages = [
+      "./img/1.jpeg",
+      "./img/2.jpeg",
+      "./img/3.jpeg",
+      "./img/4.jpeg",
+      "./img/5.jpeg"
+    ];
+    let currentImageIndex = 0;
+    function openLightbox(src, index) {
+      currentImageIndex = parseInt(index);
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').style.display = 'block';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+      fadeLightboxImage(galleryImages[currentImageIndex]);
+    }
+    function prevImage() {
+      currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+      fadeLightboxImage(galleryImages[currentImageIndex]);
+    }
+    function fadeLightboxImage(src) {
+      const img = document.getElementById('lightbox-img');
+      img.classList.add('animate__animated', 'animate__fadeOut');
+      setTimeout(() => {
+        img.src = src;
+        img.classList.remove('animate__fadeOut');
+        img.classList.add('animate__fadeIn');
+        setTimeout(() => {
+          img.classList.remove('animate__animated', 'animate__fadeIn');
+        }, 500);
+      }, 500);
+    }
+  </script>
+  <!-- Carrusel Automático Visible -->
+  <script>
+    let currentIndexCarousel = 0;
+    const carouselImages = document.querySelectorAll('.carousel-image');
+    const totalCarousel = carouselImages.length;
+    function cycleCarousel() {
+      carouselImages[currentIndexCarousel].classList.remove('active');
+      currentIndexCarousel = (currentIndexCarousel + 1) % totalCarousel;
+      carouselImages[currentIndexCarousel].classList.add('active');
+    }
+    setInterval(cycleCarousel, 3000);
+  </script>
+  <!-- Lluvia de Corazones Automática (más lenta) -->
+  <script>
+    function crearCorazon() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = 5 + Math.random() * 3 + 's';
+      heart.style.fontSize = (1 + Math.random() * 2) + 'em';
+      heart.innerHTML = '&#10084;';
+      document.getElementById('heart-container').appendChild(heart);
+      setTimeout(() => { heart.remove(); }, 8000);
+    }
+    setInterval(crearCorazon, 500);
+  </script>
+</body>
+</html>
